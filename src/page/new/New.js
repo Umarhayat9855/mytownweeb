@@ -6,8 +6,11 @@ import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUpload
 import { doc, onSnapshot, collection, query, where, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL, getStorage, } from "firebase/storage";
 import db from '../../db';
+import LoadingSpin from "react-loading-spin";
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import { useTranslation } from "react-i18next";
+import toast, { Toaster } from "react-hot-toast";
 const New = () => {
     const [file, setFile] = useState("")
     const [Name, setName] = useState('');
@@ -18,50 +21,61 @@ const New = () => {
     const [Tehsil, setTehsil] = useState('');
     const [Mahala, setMahala] = useState('');
     const [imgUrl, setImgUrl] = useState("");
-
+    const [Loader, setLoader] = useState(true);
+    const { t } = useTranslation(["sidebar"])
     const Adddata = async () => {
+        if (
+            Name === "" &&
+            Occuption === "" &&
+            Phonenumber === "" &&
+            Tehsil === "" &&
+            Mahala === "" &&
+            imgUrl === "") {
+            toast.error("Please Enter Detail")
+        }
+        else {
+            const docRef = await addDoc(collection(db, "All Peoples"), {
+                Peoplename: Name,
+                // Lastname: LastName,
+                Occuption: Occuption,
+                Phonenumber: Phonenumber,
+                // Gender: Gender,
+                userid: Math.random().toString(32).substring(1, 18),
+                Tehsil: Tehsil,
+                Checkno: Mahala,
+                Profile: imgUrl,
+            });
+            toast.success("Add Seccessfull")
+            setName("");
+            setOccupation("");
+            setPhonenumber("");
+            setTehsil("");
+            setMahala("");
+            setImgUrl("");
+            setFile("");
+        }
 
-        const docRef = await addDoc(collection(db, "All Peoples"), {
-            Peoplename: Name,
-            Lastname: LastName,
-            Occuption: Occuption,
-            Phonenumber: Phonenumber,
-            Gender: Gender,
-            Tehsil: Tehsil,
-            Checkno: Mahala,
-            Profile: imgUrl,
-        });
-        console.log("Document written with ID: ", file);
     }
     const uploadImage = async (e) => {
-        console.log("The error ois,", file);
         e.preventDefault();
-        // if (imgUrl === "") {
-        //   toast.error("Please upload the image first")
-        //   return
-        // }
         if (file === "") {
-            // toast.error("Please Upload Image");
-            alert("Please Upload Image")
+            toast.error("Please Upload Image")
             return;
         }
-        // setLoader(false);
+        setLoader(false);
         if (
             Name === ""
 
         ) {
-            // setLoader(true);
-            alert("Please enter product details first ")
-            // toast.error("Please enter product details first ");
+            setLoader(true);
+            toast.error("Please enter details first ")
         } else {
-            // Add loader variable here ;
 
             const storage = getStorage();
             const storageRef = ref(storage, `/file/${Name}`);
             await uploadBytes(storageRef, file).then((snapshot) => {
-                alert("File uploaded")
-                // toast.success("File uploaded success");
-                // setLoader(true);
+                toast.success("File upload Successfully")
+                setLoader(true);
             });
             await getDownloadURL(ref(storage, `/file/${Name}`))
                 .then((url) => {
@@ -69,9 +83,7 @@ const New = () => {
                 })
                 .catch((error) => {
                     alert("error")
-                    // toast.error("Error");
                 });
-            // console.log("selectedDate", date);
         }
     };
 
@@ -84,7 +96,7 @@ const New = () => {
                     {title}
                 </div> */}
                 <div className='bottom'>
-                    <div className='left'>
+                    {/* <div className='left'>
                         <img
                             src={
                                 file
@@ -97,14 +109,14 @@ const New = () => {
                             className="imagebutton"
                             onClick={(e) => uploadImage(e)}
                         >
-                            Upload image
+                            {t("Upload Image")}
                         </button>
-                    </div>
-                    <div className='right'>
+                    </div> */}
+                    {/* <div className='right'>
                         <form>
                             <div className='formInput'>
                                 <label htmlFor='file'>
-                                    Image: <DriveFolderUploadOutlinedIcon className='icon' />
+                                    {t("Image")}: <DriveFolderUploadOutlinedIcon className='icon' />
                                 </label>
                                 <input
                                     type='file' id='file'
@@ -113,43 +125,133 @@ const New = () => {
                             </div>
 
                             <div className="formInput">
-                                {/* <label>{input.label}</label> */}
-                                <label>First Name</label>
-                                {/* <input type={input.type} placeholder={input.placeholder} /> */}
-                                <input placeholder='First Name'
+                                <label>{t("Name")}</label>
+                                <input placeholder={t('Enter Name')}
                                     onChange={event => setName(event.target.value)} required
                                 ></input>
-                                <label>Last Name</label>
-                                <input placeholder='Last Name' onChange={event => setLastName(event.target.value)} required></input>
-                                <label>Phone</label>
-                                <input placeholder='Phone' onChange={event => setPhonenumber(event.target.value)} required></input>
-                                <label for="Occupation">Occupation</label>
+                                
+                                <label>{t("Phone Number")}</label>
+                                <input placeholder={t('Phone Number')} onChange={event => setPhonenumber(event.target.value)} required></input>
+                                <label for="Occupation">{t("Occupation")}</label>
                                 <select id="Occupation" name="Occupation" onChange={event => setOccupation(event.target.value)} required>
-                                    <option value="Labour">Labour</option>
-                                    <option value="farmor">farmor</option>
-                                    <option value="Other">Other</option>
+                                    <option value="Labour">{t("Labour")}</option>
+                                    <option value="farmor">{t("farmor")}</option>
+                                    <option value="Other">{t("Other")}</option>
                                 </select>
-                                {/* <label>State</label>
-                                <input placeholder='State'onChange={event => setName(event.target.value)}></input> */}
-                                <label>Tehsil</label>
-                                <input placeholder='Tehsil' onChange={event => setTehsil(event.target.value)} required></input>
-                                <label>Check No</label>
-                                <input placeholder='Check No' onChange={event => setMahala(event.target.value)} required></input>
-                                {/* <label for="Gender">Gender:</label>
-                                <select id="Gender" name="Gender" onChange={event => setGender(event.target.value)} required>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </select> */}
+                                <label for="Tehsil">{t("Tehsil")}</label>
+                                <select id="Tehsil" name="Tehsil" onChange={event => setTehsil(event.target.value)} required>
+                                    <option value="Gojra">{t("Gojra")}</option>
+                                    <option value="Toba">{t("Toba")}</option>
+                                    <option value="Other">{t("Other")}</option>
+                                </select>
+                                <label for="Check No">{t("Check No")}</label>
+                                <select id="Check No" name="Check No" onChange={event => setMahala(event.target.value)} required>
+                                    <option value="155">{t("155")}</option>
+                                    <option value="156">{t("156")}</option>
+                                    <option value="158">{t("158")}</option>
+                                </select>
                             </div>
-
-                            {/* <button onClick={Adddata}>Add</button> */}
                             <Stack spacing={2} direction="row">
-                                <Button variant="contained" onClick={Adddata}>Add</Button>
+                                <Button variant="contained" onClick={Adddata}>{t("Add")}</Button>
                             </Stack>
                         </form>
-                    </div>
+                    </div> */}
+                    <form class="card">
+                        <div class="containeer">
+                            {/* <div class="card-title">
+                                <h2>{t("User Information")}</h2>
+                            </div> */}
+                            {!Loader ? (
+                                <div className="loader">
+                                    <LoadingSpin size={50} />
+                                </div>
+                            ) : (
+                                <div class="card-body">
+                                    <div className='left'>
+                                        <img
+                                            src={
+                                                file
+                                                    ? URL.createObjectURL(file)
+                                                    : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                                            }
+                                            alt=""
+                                        />
+                                        <div className='formInput'>
+                                            <label htmlFor='file'>
+                                                <b>{t("Image")}</b>: <DriveFolderUploadOutlinedIcon className='icon' style={{ marginBottom: "-8PX" }} />
+                                            </label>
+                                            <input
+                                                type='file' id='file'
+                                                onChange={(e) => setFile(e.target.files[0])}
+                                                style={{ display: "none" }} />
+                                        </div>
+                                        <button
+                                            className="imagebutton"
+                                            onClick={(e) => uploadImage(e)}
+                                        >
+                                            {t("Upload Image")}
+                                        </button>
+                                    </div>
+
+                                    <div class="payment-info flex justify-space-between">
+                                        <div class="column billing">
+                                            <div class="field full">
+                                                <label>{t("Name")}</label>
+                                                <input id="name" type="text" className='user__inpt' placeholder={t('Enter Name')}
+                                                    onChange={event => setName(event.target.value)} value={Name} required
+                                                />
+                                            </div>
+                                            <div class="field full">
+                                                <label for="Occupation">{t("Occupation")}</label>
+                                                <select id="Occupation" name="Occupation"
+                                                    onChange={event => setOccupation(event.target.value)} value={Occuption} required>
+                                                    <option value="Labour">{t("Labour")}</option>
+                                                    <option value="farmor">{t("farmor")}</option>
+                                                    <option value="Other">{t("Other")}</option>
+                                                </select>
+                                            </div>
+                                            <div class="flex justify-space-between">
+                                                <div class="field half">
+                                                    <label for="Check No">{t("Check No")}</label>
+                                                    <select id="Check No" name="Check No"
+                                                        onChange={event => setMahala(event.target.value)} value={Mahala} required>
+                                                        <option value="155">{t("155")}</option>
+                                                        <option value="156">{t("156")}</option>
+                                                        <option value="158">{t("158")}</option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="column shipping">
+
+                                            <div class="field full">
+                                                <label>{t("Phone Number")}</label>
+                                                <input id="Phone Number" type="text" className='user__inpt' placeholder={t("Phone Number")}
+                                                    onChange={event => setPhonenumber(event.target.value)} value={Phonenumber}
+                                                    required
+                                                />
+                                            </div>
+                                            <div class="field full">
+                                                <label for="Tehsil">{t("Tehsil")}</label>
+                                                <select id="Tehsil" name="Tehsil" value={Tehsil} onChange={event => setTehsil(event.target.value)} required>
+                                                    <option value="Gojra">{t("Gojra")}</option>
+                                                    <option value="Toba">{t("Toba")}</option>
+                                                    <option value="Other">{t("Other")}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            <Stack spacing={2} direction="row" style={{ justifyContent: "center" }}>
+                                <Button variant="contained" onClick={Adddata}>{t("Add")}</Button>
+                            </Stack>
+                        </div>
+                    </form>
                 </div>
+                <Toaster />
             </div>
         </div>
     )

@@ -9,7 +9,9 @@ import Table from '../../components/table/Table'
 import { doc, onSnapshot, collection, query, where, } from "firebase/firestore";
 import db from '../../db';
 import LoadingSpin from "react-loading-spin";
+import { useTranslation } from "react-i18next";
 const Home = () => {
+  const { t } = useTranslation(["sidebar"]);
   const [user, setuser] = useState([]);
   const [cart, setcart] = useState([]);
   const [Loader, serLoader] = useState(false)
@@ -44,7 +46,7 @@ const Home = () => {
               </div>
               <div className='charts'>
                 <Featured />
-                <Charts title="Last 6 Months (Revenue)" aspect={2 / 1} />
+                <Charts title={t("Last 6 Months (Revenue)")} aspect={2 / 1} />
               </div>
               {/* <div className='listContainer'>
         <div className='listTitle'>Latest Orders</div>

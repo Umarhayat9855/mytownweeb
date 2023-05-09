@@ -1,12 +1,14 @@
 import React from 'react'
 import './widgets.scss'
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { useTranslation } from "react-i18next";
 //import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 //import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 //import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 //import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+
 const Widgets = ({ type,value }) => {
-console.log("type",value)
+    const { t } = useTranslation(["sidebar"])
     let amount = 28;
     let data;
     // let diff = 20;
@@ -82,9 +84,11 @@ console.log("type",value)
     return (
         <div className='widget'>
             <div className='left'>
-                <span className='title'>{data.title}</span>
+                {/* <span className='title'>{data.title}</span> */}
+                <span className='title'>{t("TOTAL USERS")}</span>
                 <span className='counter'>{data.isMoney && "$"} {data.amount}</span>
-                <span className='link'>{data.link}</span>
+                {/* <span className='link'>{data.link}</span> */}
+                <span className='link'>{t("See all users")}</span>
             </div>
 
         </div>

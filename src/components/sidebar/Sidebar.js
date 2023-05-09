@@ -14,9 +14,11 @@ import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link } from 'react-router-dom'
 import { DarkModeContext } from "../../context/darkModeContext";
+import { useTranslation } from "react-i18next";
 import logo3 from '../35.jpg';
 const Sidebar = () => {
     const { dispatch } = useContext(DarkModeContext);
+    const { t } = useTranslation(["sidebar"])
     return (
         <div className='sidebar'>
             {/* <div className='top'>
@@ -31,24 +33,24 @@ const Sidebar = () => {
                     <img src={logo3} alt=""  ></img>
                 </div> */}
                 <div className='center'>
-                   <b><p>My Town</p> </b>
+                    <b><p>{t("My Town")}</p> </b>
                 </div>
             </div>
             <hr />
             <div className='center'>
                 <ul>
-                    <p className='title'>MAIN</p>
+                    <p className='title'>{t("MAIN")}</p>
                     <Link to='/' style={{ textDecoration: "none" }}>
                         <li>
                             <DashboardIcon className='icon' />
-                            <span>Dashboard</span>
+                            <span>{t("Dashboard")}</span>
                         </li>
                     </Link>
-                    <p className='title'>LISTS</p>
+                    <p className='title'>{t("LISTS")}</p>
                     <Link to='/addusers' style={{ textDecoration: "none" }}>
                         <li>
                             <PersonOutlineIcon className='icon' />
-                            <span>Add People</span>
+                            <span>{t("Add People")}</span>
                         </li>
                     </Link>
                     {/* <Link to='/products' style={{ textDecoration: "none" }}>
@@ -72,26 +74,26 @@ const Sidebar = () => {
                         <span>Add People</span>
                     </li>
                     </Link> */}
-                    
-                    
-                    
-                    
-                    <p className='title'>SHOW Peoples</p>
+
+
+
+
+                    <p className='title'>{t("Show Peoples")}</p>
                     <Link to='/users' style={{ textDecoration: "none" }}>
-                    <li>
-                        <SettingsSystemDaydreamOutlinedIcon className='icon' />
-                        <span>Show Peoples</span>
-                    </li>
+                        <li>
+                            <SettingsSystemDaydreamOutlinedIcon className='icon' />
+                            <span>{t("Show Peoples")}</span>
+                        </li>
                     </Link>
-                    
-                    <p className='title'>USER</p>
+
+                    <p className='title'>{t("USER")}</p>
                     {/* <li>
                         <AccountCircleOutlinedIcon className='icon' />
                         <span>Profile</span>
                     </li> */}
                     <li>
                         <ExitToAppIcon className='icon' />
-                        <span>Logout</span>
+                        <span>{t("Logout")}</span>
                     </li>
                 </ul>
             </div>

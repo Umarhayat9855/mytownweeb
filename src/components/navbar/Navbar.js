@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import './navbar.scss'
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
@@ -8,8 +8,19 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import { DarkModeContext } from "../../context/darkModeContext";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 const Navbar = () => {
     const { dispatch } = useContext(DarkModeContext);
+    const { i18n, t } = useTranslation(["sidebar"]);
+    useEffect(() => {
+        if (localStorage.getItem("i18nextLng")?.length > 2) {
+            i18next.changeLanguage("en");
+        }
+    }, []);
+    const handleLanguageChange = (e) => {
+        i18n.changeLanguage(e.target.value);
+    };
     return (
         <div className='navbar'>
             <div className='wrapper'>
@@ -20,7 +31,14 @@ const Navbar = () => {
                 <div className='items'>
                     <div className='item'>
                         <LanguageOutlinedIcon className='icon' />
-                        English
+                        <select
+                            value={localStorage.getItem("i18nextLng")}
+                            onChange={handleLanguageChange}
+                            id='languagebtn'
+                        >
+                            <option value="en" >{t("English")}</option>
+                            <option value="urdu" >{t("Urdu")}</option>
+                        </select>
                     </div>
                     <div className='item'>
                         <DarkModeOutlinedIcon className='icon'
